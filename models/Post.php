@@ -117,4 +117,46 @@
 
 
         }
+
+        //Update Post
+        public function update(){
+            //Create query
+            $query = 'UPDATE '.
+                $this->table . '
+            SET
+                title = :title,
+                body = :body,
+                author = :author,
+                category_id = :category_id
+            WHERE
+                id = :id';
+
+            //Prepare statment
+            $stmt = $this->conn->prepare($query);
+
+            //Clean data
+            $this->title = htmlspecialchars(strip_tags($this->title));
+            $this->body = htmlspecialchars(strip_tags($this->body));
+            $this->author = htmlspecialchars(strip_tags($this->author));
+            $this->category_id = htmlspecialchars(strip_tags($this->category_id));
+            $this->id = htmlspecialchars(strip_tags($this->id));
+
+
+            //Bind data
+            $stmt->bindParam(':title', $this->title);
+            $stmt->bindParam(':body', $this->body);
+            $stmt->bindParam(':author', $this->author);
+            $stmt->bindParam(':category_id', $this->category_id);
+            $stmt->bindParam(':id', $this->id);
+
+
+            if ($stmt->execute()){
+                return true;
+            } else {
+                printf("Error: %s.\n", $stmt->error);
+                return false;
+            }
+
+
+        }
     }
